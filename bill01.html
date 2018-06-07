@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<meta charset="utf-8">
+<html>
+<!--김민 / 2018.06.06-->
+<!--자바스크립트 영수증만들기-->
+<head>
+    <h1>영수증</h1>
+</head>
+<body>
+<script>
+var totalprice;//총합계금액 변수선언
+var notaxtotal = 0;//면세물품 변수선언
+var taxprice = 0;//과세물품
+var taxrate =10;//세율
+var taxval;//부가세 
+var netval;//과세물품의 세금 부과전 가격
+
+var k03_itemname = ["오리온초코파이", "바나나", "건포도특가모음", "[오렌지]주스", "초코에몽도라에몽", 
+				"커피맛나는우유 ", "제주등심돼지고기", "냉동블루베리", "매콤얼갈이김치 ", "핸드워시데톨", 
+				"맛있는파김치", "세척당근식품묶음", "스판반팔티화이트", "트렌치코트", "서울우유",
+				"그린블루베리믹스", "치킨너겟하림특가", "풀무원치즈", "로레알헤어오일", "로투스비스킷", 
+				"정장벨트남성용", "밀키푸딩초코맛  ", "슈퍼타이초강력세제", "욕실수건", "제철상품양파특가", 
+				"유한킴벌리수세미", "샴푸린스특가", "욕실청소용행주", "욕실매트", "캘리포니아오렌지"];//품목 이름을담은 배열
+var k03_price = [1000, 2500, 3300, 25000, 1000, 2300, 45000, 3301, 6000, 7011, 
+			1000, 2000, 3400, 4500, 4300, 1100, 200, 35000, 2300, 3300, 
+			3000, 4200, 10000, 2000, 13400, 5500, 4501, 2300, 55700, 30000];//품목가격을담은배열
+var num = [ 1, 1, 1, 2, 3, 1, 1, 5, 1, 1, 
+			2, 3, 3, 4, 4, 5, 9, 7, 1, 1, 
+			2, 90, 4, 1, 1, 4, 2, 10, 1, 5];//품목갯수
+var taxfree =[true, true, true, true, true, false, true, false, true, false, 
+				true, true, false, false, false, false, false, false, false, false, 
+				false, true, true, true, true, true, true, false, false, true]	//면세여부를담은배열		
+	
+	function star(i){ //별찍기 함수선언
+		if (taxfree[i] == true) {//면세물품이면 별찍기
+			return '*';//별을찍어서 return
+		} else {
+			return '';//아니면 빈값을 return
+		}
+	}
+  //날짜 가져오기
+  function Dateform() {
+		var d = new Date(),//날짜가담겨있는 객체불러오기
+		month = '' + (d.getMonth() +1),//month불러오기,인덱스0부터시작함1더해줘야함
+		day = '' + d.getDate(),//날짜가져오기
+		year = d.getFullYear(),//년도가져오기 
+		hour = d.getHours(),//시간가져오기
+		minutes = d.getMinutes();//분단위가져오기
+  
+  if(month.length < 2) month = '0' + month; //달이 한자리수이면 앞에다 0을붙여줘야함
+  if(day.length < 2) day = '0' + day;//일이 한자리수이면역시앞에다0을붙여줌
+  
+  return [year, month, day].join('-') +' '+[hour, minutes].join(':');
+ }
+ //return값 설정 join 각각의 변수를 합쳐주는데 -표시를 구분자로한다. split의 반대임. } 
+ //콤마찍기함수
+		function k03_Comma(date_value) { //콤마찍기함수.
+					return Number(date_value).toLocaleString('en');
+		}
+ 
+ for (var i = 0; i < k03_itemname.length; i++) { //for반복문돌려서 총합가격 해주기. 
+			totalprice = (k03_price[i] * num[i]); 
+			if (taxfree[i] == false) {
+			taxprice += k03_price[i] * num[i];}
+			if (taxfree[i] == true) {
+			notaxtotal += k03_price[i] * num[i];
+			}
+  }
+		document.write("<font face='돋움체'>");//폰트설정 돋움체
+		document.write("<table border=0 valign=middle>");//테이블만들기 
+		document.write("<tr>");//tr 행부터생성하기
+		document.write("<td colspan=3 rowspan =2 align = left> <strong> <font size=6> emart </font></strong></td>");//열합쳐주기
+		document.write(" <td colspan=3> 이마트 죽전점 (031)888-1234</font><br></tr>");//열3개칸합치기
+		document.write("<td colspan=6 align=right>208-86-50813 이갑수 <br>", " ");//열6개합치기 오른쪽정렬 
+		document.write("용인시 수지구 포은대로 552 <br>");
+        //표하나씩 만드는데 우선 보기좋게 선긋고하기. 
+		document.write("<tr><td colspan =6 align =left>영수증 미지참시 교환/환불 불가(30일내)<br>");//열6칸합치고 왼쪽정렬
+		document.write("교환/환불 구매점에서 가능(결제카드지참) <br>");
+		document.write("체크카드/신용카드 청구취소 반영은<br>");
+		document.write("최대 3~5일 소요 (주말,공휴일제외) <br><br>");
+		document.write("<tr><td colspan =4 align = left>[구매]"+ Dateform() + "</td>");//열4칸합치기 왼쪽정렬
+		document.write("<td colspan =2 align = right>POS:0009-2418<br></td>");//나머지열2칸합치기 오른쪽정렬
+		
+		
+		document.write("<tr><td colspan=6>------------------------------------------------</td></tr>");
+		document.write("<tr align=right><td colspan=2></td>");//가운데정렬 열2칸합치기
+		document.write("<td align=left>상 품 명</td><td>단 가</td><td>수 량</td> <td>금 액</td><br>");
+		document.write("<tr><td colspan=6>------------------------------------------------</td></tr>");//열6칸합치기 
+  
+  for (var i =0;i<price.length; i++){ //for반복문돌려서 각열에 번호/상품명/단가/수량/금액 찍어주기
+		document.write("<tr align = right>");
+		document.write("<td>"+(i+1)+ "</td>");
+		document.write("<td>"+star(i)+"</td>");
+		document.write("<td align=left>"+k03_itemname[i].substr(0, 6)+"&nbsp;&nbsp;&nbsp;&nbsp;</td>");
+		document.write("<td>"+k03_Comma(k03_price[i])+"</td>");//콤마함수가져와 콤마찍어주기
+		document.write("<td>"+k03_Comma(num[i])+"</td>");//물건수량찍어주기
+		document.write("<td>"+k03_Comma(k03_price[i]*num[i])+"</td>");//가격총합계금액찍어주기
+		document.write("</tr>");
+		
+  }
+  
+  netval = Math.floor(taxprice / (1 + taxrate / 100.0));// 소수점 버림
+  taxval = taxprice - netval;//세금가격구하는 공식 과세물품가격 - 물품가격
+
+  document.write("<tr align = right>"); //행만들기
+  document.write("<td colspan=5><pre><font face = '돋움체'>(*)면 세  물 품</pre</td>"); //열5칸합치기 
+  document.write("<td>" + k03_Comma(notaxtotal) +"</td></tr>");
+  document.write("<tr align = right>");//새로운행만들기 오른쪽정렬
+  document.write("<td colspan=5><pre><font face = '돋움체'> 과 세  물 품</pre</td>");
+  document.write("<td>" + k03_Comma(netval) +"</td>");
+  document.write("<tr align = right>");
+  document.write("<td colspan=5><pre><font face = '돋움체'>부   가   세</pre></td>");
+  document.write("<td>" + k03_Comma(taxval) +"</td>");
+  document.write("<tr align = right>");
+  document.write("<td colspan=5><pre><font face = '돋움체'>합        계</pre></td>");
+  document.write("<td>" + k03_Comma(notaxtotal+taxprice) +"</td>");//계산을 하려면 괄호를 닫아줘야 함.
+  document.write("<tr align = right>");
+  document.write("<td colspan=3 align =left> 결 제 대 상 금 액</td>");
+  document.write("<td colspan=3 align = right>" + k03_Comma(notaxtotal+taxprice) +"</td>");
+  
+  document.write("<tr><td colspan=6>------------------------------------------------</td></tr>");
+  document.write("<tr><td colspan=4>0024 하  나 </td>");
+  document.write("<td colspan=2 align = right>5417**8890/07850246</td></tr>");
+ 
+  document.write("<tr><td colspan=3 align = left>카드결제 </td>");
+  document.write("<td colspan = 3 align = right>일시불 / "+k03_Comma(notaxtotal+taxprice) +"</td></tr>");//콤마찍기함수불러와출력하기
+  document.write("<tr><td colspan=6>------------------------------------------------</td></tr>");
+  document.write("<tr><td colspan=6>김* 고객님의 포인트 현황입니다.</td></tr>");
+ 
+ </script> <!--자바스크립트닫아주기-->
+</body>
+</html>
+
+
